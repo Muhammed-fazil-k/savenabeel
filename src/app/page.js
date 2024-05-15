@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   collection,
   addDoc,
@@ -12,10 +12,13 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import Link from "next/link";
+import AuthContext from "@/context/AuthContext";
 
 export default function Home() {
   const [total, setTotal] = useState(0);
   const [donations, setDonations] = useState([]);
+
+  const { user, logout } = useContext(AuthContext);
 
   //read item
 
@@ -53,7 +56,8 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between sm:p-24 p-4">
       <h1>Save NABEEL</h1>
-      <Link href="/add">Add Donation</Link>
+      {user && <Link href="/add">Add Donation</Link>}
+
       <div className="bg-slate-800 p-4 rounded-lg">
         {donations.length < 1 ? (
           ""
