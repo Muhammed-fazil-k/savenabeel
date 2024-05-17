@@ -4,7 +4,6 @@ import { db } from "@/config/firebase";
 import validation from "@/utils/validation";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import CurrencyInput from "react-currency-input-field";
 
 const DonationPage = () => {
   const [error, setError] = useState({});
