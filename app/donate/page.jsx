@@ -1,48 +1,57 @@
 "use client";
-import React, { useState } from "react";
-import { db } from "../firebase";
-import { addDoc, collection } from "firebase/firestore";
-import Link from "next/link";
-import validation from "@/utils/validations";
 import InputField from "@/components/InputFields";
+import { db } from "@/config/firebase";
+import validation from "@/utils/validation";
+import { addDoc, collection } from "firebase/firestore";
+import React, { useState } from "react";
+import CurrencyInput from "react-currency-input-field";
 
-function AddDonationPage() {
+const DonationPage = () => {
   const [error, setError] = useState({});
   const [newDonation, setNewDonation] = useState({
     name: "",
-    amount: "",
+    amount: 0,
     houseName: "",
     state: "",
     district: "",
     country: "",
+    createdAt: "",
+    assembly: "",
+    paymentStatus: true,
   });
   const handleChange = (event) => {
-    console.log("typing");
-    console.log(event.target.name);
     setNewDonation({ ...newDonation, [event.target.name]: event.target.value });
   };
 
-  //add item
-  const addItem = async (e) => {
-    const defaultAddress = "GENERAL";
-    e.preventDefault();
-    let err = validation(newDonation);
-    let validName = newDonation.name.trim();
-    if (validName == "") {
-      validName = "Unknown User";
+  const handleCheckbox = (e) => {
+    setNewDonation({ ...newDonation, paymentStatus: e.target.checked });
+  };
+
+  const getValidParams = (value, def) => {
+    if (value === null || value === undefined || value === "") {
+      return def;
     }
+    return value;
+  };
+
+  const addItem = async (e) => {
+    e.preventDefault();
+    console.log(newDonation);
+    const defaultAddress = "GENERAL";
+    let err = validation(newDonation);
     setError(err);
     if (Object.keys(err).length === 0) {
-      console.log("Adding");
       try {
         const docRef = await addDoc(collection(db, "donations"), {
-          name: validName,
-          amount: newDonation.amount,
-          houseName: defaultAddress,
-          assembly: defaultAddress,
-          district: defaultAddress,
-          state: defaultAddress,
-          country: defaultAddress,
+          name: getValidParams(newDonation.name, "Unknown"),
+          amount: getValidParams(newDonation.amount, "0"),
+          houseName: getValidParams(newDonation.houseName, "GENERAL"),
+          assembly: getValidParams(newDonation.assembly, "Perinthalmanna"),
+          district: getValidParams(newDonation.district, "Malappuram"),
+          state: getValidParams(newDonation.state, "Kerala"),
+          country: getValidParams(newDonation.country, "India"),
+          createdAt: new Date(),
+          paymentStatus: getValidParams(newDonation.paymentStatus, "false"),
         });
         setNewDonation({ name: "", amount: "" });
         console.log("Document written with ID: ", docRef.id);
@@ -51,7 +60,6 @@ function AddDonationPage() {
       }
     }
   };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h4>Add Donation</h4>
@@ -66,6 +74,16 @@ function AddDonationPage() {
           onChange={handleChange}
           error={error.name}
         />
+        <label>Enter the Amount </label>;
+        <div className="mb-5">
+          <label>Payment Status</label>
+          <input
+            checked={newDonation.paymentStatus}
+            onChange={handleCheckbox}
+            type="checkbox"
+            name="paymentStatus"
+          />
+        </div>
         <InputField
           label="Amount"
           type="number"
@@ -93,7 +111,7 @@ function AddDonationPage() {
           onChange={handleChange}
           error={error.assembly}
         />
-        {/* <InputField
+        <InputField
           label="District"
           type="text"
           placeholder="District"
@@ -111,7 +129,6 @@ function AddDonationPage() {
           onChange={handleChange}
           error={error.state}
         />
-
         <InputField
           label="Country"
           type="text"
@@ -120,8 +137,7 @@ function AddDonationPage() {
           value={newDonation.country}
           onChange={handleChange}
           error={error.country}
-        /> */}
-
+        />
         <button
           onClick={addItem}
           type="submit"
@@ -132,6 +148,6 @@ function AddDonationPage() {
       </form>
     </div>
   );
-}
+};
 
-export default AddDonationPage;
+export default DonationPage;

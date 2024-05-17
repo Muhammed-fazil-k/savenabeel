@@ -1,0 +1,64 @@
+.donationCard {
+  background-color: rgb(212, 245, 211);
+  margin: 1.5rem 2rem;
+  padding: 2rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  border-radius: 1rem;
+  align-items: center;
+  min-width: 22rem;
+  max-width: 60rem;
+  max-height: 20rem;
+}
+.donationCard .donorDetails {
+  padding-right: 16px;
+  border-right: 1px solid black;
+  margin-right: 5px;
+  width: 55%;
+}
+
+.donationCard .donationDetails {
+  margin-left: 5px;
+  width: 40%;
+}
+.donationCard .donationStatus {
+  width: 5%;
+  margin-left: 5px;
+}
+
+.donorDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.donorDetailsSub h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.donorDetailsSub p {
+  font-size: 0.9rem;
+}
+
+.donorDetails p {
+  font-size: 0.8rem;
+}
+
+.donationDetails {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+.donationDetails h3 {
+  font-size: large;
+  font-weight: bold;
+}
+
+.donationStatus {
+  width: 2rem;
+}
