@@ -1,5 +1,6 @@
 import React from "react";
 import "@/assets/styles/globals.css";
+import "@/assets/styles/layout.css";
 import NavBar from "@/components/NavBar";
 export const metadata = {
   title: "Save Nabeel",
@@ -11,7 +12,7 @@ const MainLayout = ({ children }) => {
   return (
     <html>
       <body>
-        <main>
+        <main className="layout">
           <NavBar />
           {children}
         </main>

@@ -4,12 +4,12 @@ import { db } from "@/config/firebase";
 import validation from "@/utils/validation";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-
+import "@/assets/styles/donationForm.css";
 const DonationPage = () => {
   const [error, setError] = useState({});
   const [newDonation, setNewDonation] = useState({
     name: "",
-    amount: 0,
+    amount: "",
     houseName: "",
     state: "",
     district: "",
@@ -60,10 +60,12 @@ const DonationPage = () => {
     }
   };
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h4>Add Donation</h4>
+    <div className="donate-form-container">
+      <div className="donate-form-title">
+        <h1>Add Donation</h1>
+      </div>
 
-      <form className="max-w-sm mx-auto">
+      <form className="donate-form">
         <InputField
           label="Name of the Donor"
           type="text"
@@ -73,17 +75,9 @@ const DonationPage = () => {
           onChange={handleChange}
           error={error.name}
         />
-        <label>Enter the Amount </label>;
-        <div className="mb-5">
-          <label>Payment Status</label>
-          <input
-            checked={newDonation.paymentStatus}
-            onChange={handleCheckbox}
-            type="checkbox"
-            name="paymentStatus"
-          />
-        </div>
+
         <InputField
+          required="true"
           label="Amount"
           type="number"
           placeholder="Amount"
@@ -92,6 +86,16 @@ const DonationPage = () => {
           onChange={handleChange}
           error={error.amount}
         />
+
+        <div className="inputFieldCheckbox">
+          <label>Payment Completed</label>
+          <input
+            checked={newDonation.paymentStatus}
+            onChange={handleCheckbox}
+            type="checkbox"
+            name="paymentStatus"
+          />
+        </div>
         <InputField
           label="House name"
           type="text"
@@ -113,7 +117,7 @@ const DonationPage = () => {
         <InputField
           label="District"
           type="text"
-          placeholder="District"
+          placeholder="Malappuram"
           name="district"
           value={newDonation.district}
           onChange={handleChange}
@@ -122,7 +126,7 @@ const DonationPage = () => {
         <InputField
           label="State"
           type="text"
-          placeholder="State"
+          placeholder="Kerala"
           name="state"
           value={newDonation.state}
           onChange={handleChange}
@@ -131,17 +135,13 @@ const DonationPage = () => {
         <InputField
           label="Country"
           type="text"
-          placeholder="Country"
+          placeholder="India"
           name="country"
           value={newDonation.country}
           onChange={handleChange}
           error={error.country}
         />
-        <button
-          onClick={addItem}
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
+        <button onClick={addItem} type="submit">
           Submit
         </button>
       </form>

@@ -6,10 +6,13 @@ export default function InputField({
   onChange,
   error,
   name,
+  required,
 }) {
   return (
-    <div className="mb-5">
-      <label>{label}</label>
+    <div className="inputField">
+      <label>
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
       <input
         value={value}
         onChange={onChange}

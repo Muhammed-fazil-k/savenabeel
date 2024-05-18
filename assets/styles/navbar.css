@@ -1,0 +1,23 @@
+.navbar {
+  padding: 1rem;
+  background-color: #ecebeb;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(172, 168, 168);
+}
+
+.links {
+  display: flex;
+  flex-direction: row;
+
+  gap: 1rem;
+}
+
+.links div {
+  background-color: #2e9036;
+  color: white;
+  padding: 10px;
+  border-radius: 1rem;
+}

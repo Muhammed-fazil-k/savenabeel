@@ -20,10 +20,14 @@ const HomePage = () => {
       donArr.push({ ...doc.data(), id: doc.id });
     });
     const totalAmount = donArr.reduce((acc, current) => {
-      return acc + parseInt(current.amount, 10);
+      debugger;
+      console.log(current.amount);
+
+      return acc + parseInt(current.amount);
     }, 0);
+    const sortArr = [...donArr].sort((a, b) => b.createdAt - a.createdAt);
     setTotal(totalAmount);
-    setDonations(donArr);
+    setDonations(sortArr);
   };
 
   useEffect(() => {
@@ -32,16 +36,23 @@ const HomePage = () => {
   return (
     <div className="mainPage">
       <div className="heading">
-        <h1 className="text-3xl">Save Nabeel</h1>
+        <h1 className="text-3xl">Support Nabeel's Recovery</h1>
+        <p>Every donation counts!!!!</p>
       </div>
       {donations.length < 1 && <p>No Donation Found</p>}
       <div className="summary">
-        <span>
-          ₹{currencyFormatter(total)} raised (
-          {((total / 6500000) * 100).toFixed(2)}% of our goal)
-        </span>
-        <span>Target</span>
-        <span>₹65,00,000</span>
+        <div className="summary-raised">
+          <p> Total raised</p>
+          <p>₹{currencyFormatter(total)}</p>
+        </div>
+        <div className="summary-percentage">
+          {((total / 6500000) * 100).toFixed(2)}%
+        </div>
+
+        <div className="summary-raised">
+          <p> Goal</p>
+          <p>₹65,00,000</p>
+        </div>
       </div>
       <div>
         <ul>

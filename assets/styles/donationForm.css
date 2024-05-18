@@ -1,0 +1,42 @@
+.donate-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.donate-form-title {
+  color: #2e9036;
+  margin-bottom: 0.5rem;
+  font-size: large;
+  font-weight: bold;
+}
+.inputField {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.inputFieldCheckbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+.donate-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.donate-form button {
+  background-color: #2e9036;
+  color: white;
+  padding: 10px;
+  border-radius: 1rem;
+}

@@ -1,15 +1,21 @@
 import Link from "next/link";
 import React from "react";
-
+import "@/assets/styles/navbar.css";
+import logo from "@/assets/images/fundraiser.webp";
+import Image from "next/image";
 const NavBar = () => {
   return (
-    <nav className="bg-blue-300 border-b border-blue-500">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">Hello</div>
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <nav className="navbar">
+      <div className="logo">
+        <Link href={"/"}>
+          <Image src={logo} width={50} />
+        </Link>
+      </div>
+      <div className="links">
+        {/* <div>
           <Link href="/login">Login</Link>
-        </div>
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        </div> */}
+        <div className="">
           <Link href="/donate">Add Donation</Link>
         </div>
       </div>
