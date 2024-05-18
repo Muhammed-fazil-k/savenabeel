@@ -3,9 +3,18 @@ import InputField from "@/components/InputFields";
 import { db } from "@/config/firebase";
 import validation from "@/utils/validation";
 import { addDoc, collection } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "@/assets/styles/donationForm.css";
+import AuthContext from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 const DonationPage = () => {
+  const { user } = useContext(AuthContext);
+  const route = useRouter();
+  useEffect(() => {
+    if (!user) {
+      route.push("/login");
+    }
+  }, [user]);
   const [error, setError] = useState({});
   const [newDonation, setNewDonation] = useState({
     name: "",

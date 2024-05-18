@@ -20,9 +20,6 @@ const HomePage = () => {
       donArr.push({ ...doc.data(), id: doc.id });
     });
     const totalAmount = donArr.reduce((acc, current) => {
-      debugger;
-      console.log(current.amount);
-
       return acc + parseInt(current.amount);
     }, 0);
     const sortArr = [...donArr].sort((a, b) => b.createdAt - a.createdAt);
