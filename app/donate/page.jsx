@@ -76,7 +76,17 @@ const DonationPage = () => {
             transition: Bounce,
           }
         );
-        setNewDonation({ name: "", amount: "" });
+        setNewDonation({
+          name: "",
+          amount: "",
+          houseName: "",
+          state: "",
+          district: "",
+          country: "",
+          createdAt: "",
+          assembly: "",
+          paymentStatus: true,
+        });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.error("Error adding document: ", e);
