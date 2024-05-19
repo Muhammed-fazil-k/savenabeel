@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "@/assets/styles/donationForm.css";
 import AuthContext from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
 const DonationPage = () => {
   const { user } = useContext(AuthContext);
   const route = useRouter();
@@ -61,10 +62,35 @@ const DonationPage = () => {
           createdAt: new Date(),
           paymentStatus: getValidParams(newDonation.paymentStatus, "false"),
         });
+        toast.success(
+          ` ${newDonation.name} donated ₹${newDonation.amount} added to fundraiser`,
+          {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          }
+        );
         setNewDonation({ name: "", amount: "" });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.error("Error adding document: ", e);
+        toast.error("Something went wrong", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       }
     }
   };
