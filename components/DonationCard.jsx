@@ -4,6 +4,7 @@ import React from "react";
 import "@/assets/styles/donationcard.css";
 import currencyFormatter from "@/utils/currencyFormatter";
 const DonationCard = ({
+  id,
   name,
   amount,
   donationDate,
@@ -18,6 +19,7 @@ const DonationCard = ({
           <p>{houseName} (House)</p>
         </div>
         <p>{formatTimestamp(donationDate)}</p>
+        {/* <p>{id}</p> */}
       </div>
       <div className="donationDetails">
         <h3>₹{currencyFormatter(amount)}</h3>

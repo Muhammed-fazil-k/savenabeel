@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   const login = async ({ username, password }) => {
     if (
       username === process.env.NEXT_PUBLIC_ADMIN_USER &&
-      password === NEXT_PUBLIC_ADMIN_PASSWORD
+      password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD
     ) {
       setUser(username);
       localStorage.setItem("user", JSON.stringify(username));
