@@ -2,15 +2,18 @@
 import "@/assets/styles/mainPage.css";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import DonationCard from "@/components/DonationCard";
 import currencyFormatter from "@/utils/currencyFormatter";
+import AuthContext from "@/context/AuthContext";
 
 const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [donations, setDonations] = useState([]);
+  const router = useRouter();
+  const { user } = useContext(AuthContext);
 
   //const { user, logout } = useContext(AuthContext);
   const readItem = async () => {
@@ -53,15 +56,27 @@ const HomePage = () => {
       </div>
       <div>
         <ul>
-          {donations.map((donation, id) => (
-            <li key={id}>
-              <DonationCard
-                name={donation.name}
-                amount={donation.amount}
-                donationDate={donation.createdAt}
-                donationStatus={donation.paymentStatus}
-                houseName={donation.houseName}
-              />
+          {donations.map((donation, keyId) => (
+            <li key={keyId}>
+              {user ? (
+                <Link href={`/edit-donation/${donation.id}`}>
+                  <DonationCard
+                    name={donation.name}
+                    amount={donation.amount}
+                    donationDate={donation.createdAt}
+                    donationStatus={donation.paymentStatus}
+                    houseName={donation.houseName}
+                  />
+                </Link>
+              ) : (
+                <DonationCard
+                  name={donation.name}
+                  amount={donation.amount}
+                  donationDate={donation.createdAt}
+                  donationStatus={donation.paymentStatus}
+                  houseName={donation.houseName}
+                />
+              )}
             </li>
           ))}
         </ul>
