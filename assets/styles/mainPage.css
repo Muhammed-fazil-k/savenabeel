@@ -4,12 +4,14 @@
   justify-content: center;
   align-items: center;
   background-color: #f2f2f2;
+  padding-bottom: 3rem;
 }
 .heading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   margin: 2rem;
   font-weight: bold;
 }
@@ -49,4 +51,30 @@
   font-size: 2rem;
   font-weight: 900;
   color: #ffd700;
+}
+
+.pagination-container {
+  padding: 5px;
+  border-radius: 1rem;
+}
+
+.pagination {
+  font-size: small;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pagination button {
+  background-color: #2e9036;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 1rem;
+}
+
+.pagination button:disabled {
+  background-color: #ccc; /* Light gray for disabled state */
+  color: #666; /* Dimmed text color for disabled state */
+  cursor: not-allowed; /* Indicate non-interactiveness */
 }

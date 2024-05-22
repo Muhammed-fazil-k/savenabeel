@@ -3,12 +3,22 @@ import "@/assets/styles/mainPage.css";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  startAfter,
+} from "firebase/firestore";
 import { db } from "@/config/firebase";
 import DonationCard from "@/components/DonationCard";
 import currencyFormatter from "@/utils/currencyFormatter";
 import AuthContext from "@/context/AuthContext";
 import { readItems } from "@/utils/dbUtil";
+import { getNumPages, getPaginatedData } from "@/utils/paginations";
+
+const ITEM_PER_PAGE = 2;
 
 const HomePage = () => {
   const [fundData, setFundData] = useState({
@@ -17,38 +27,64 @@ const HomePage = () => {
     totalAmount: "0",
   });
   const [donations, setDonations] = useState([]);
-  const router = useRouter();
   const { user } = useContext(AuthContext);
 
-  //const { user, logout } = useContext(AuthContext);
-  const readItem = async () => {
-    const donArr = await readItems(collection(db, "donations"));
+  const numPerPage = 8;
+  const [firstDoc, setFirstDoc] = useState(undefined);
+  const [lastDoc, setLastDoc] = useState(undefined);
+  const [pages, setPages] = useState(null);
+  const [page, setPage] = useState(1);
+  const [direction, setDirection] = useState(undefined);
+
+  const fetchFundDetails = async () => {
     const [fundDetails] = await readItems(collection(db, "fund-details"));
-    // const fundDetails = {
-    //   donationCount: "0",
-    //   target: "0",
-    //   totalAmount: "0",
-    // };
-    console.log(donArr.length);
-    console.log(donArr.reduce((acc, item) => acc + parseInt(item.amount), 0));
-    const sortArr = [...donArr].sort((a, b) => b.createdAt - a.createdAt);
     setFundData({
       ...fundData,
       donationCount: fundDetails.donationCount,
       target: fundDetails.target,
       totalAmount: fundDetails.totalAmount,
     });
-    setDonations(sortArr);
   };
 
   useEffect(() => {
-    readItem();
+    fetchFundDetails();
+    getNumPages("donations", numPerPage).then((pages) => setPages(pages));
   }, []);
+
+  useEffect(() => {
+    const startAfterDoc = direction === "next" ? lastDoc : undefined;
+    const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
+    getPaginatedData(
+      "donations",
+      "createdAt",
+      direction,
+      startAfterDoc,
+      endBeforeDoc,
+      numPerPage
+    ).then((data) => {
+      setDonations(data.result);
+      setFirstDoc(data.firstDoc);
+      setLastDoc(data.lastDoc);
+    });
+  }, [page]);
+
+  const handlePreviousClick = () => {
+    if (page === 1) return;
+    setDirection("prev");
+    setPage((prev) => prev - 1);
+  };
+
+  const handleNextClick = () => {
+    if (page === pages) return;
+    setDirection("next");
+    setPage((prev) => prev + 1);
+  };
   return (
     <div className="mainPage">
       <div className="heading">
         <h1 className="text-3xl">Support Nabeel's Recovery</h1>
-        <p>Every donation counts!!!!</p>
+        <h3>Every donation counts!!!!</h3>
+        <p>Received a total of {fundData.donationCount} contributions 🤲</p>
       </div>
       {donations.length < 1 && <p>No Donation Found</p>}
       <div className="summary">
@@ -94,6 +130,21 @@ const HomePage = () => {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="pagination-container">
+        {pages > 1 && (
+          <div className="pagination">
+            <button disabled={page === 1} onClick={handlePreviousClick}>
+              Prev
+            </button>
+            <span>
+              {page} out of {pages}
+            </span>
+            <button disabled={page === pages} onClick={handleNextClick}>
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
