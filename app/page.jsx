@@ -8,25 +8,36 @@ import { db } from "@/config/firebase";
 import DonationCard from "@/components/DonationCard";
 import currencyFormatter from "@/utils/currencyFormatter";
 import AuthContext from "@/context/AuthContext";
+import { readItems } from "@/utils/dbUtil";
 
 const HomePage = () => {
-  const [total, setTotal] = useState(0);
+  const [fundData, setFundData] = useState({
+    donationCount: "0",
+    target: "0",
+    totalAmount: "0",
+  });
   const [donations, setDonations] = useState([]);
   const router = useRouter();
   const { user } = useContext(AuthContext);
 
   //const { user, logout } = useContext(AuthContext);
   const readItem = async () => {
-    const querySnapshot = await getDocs(collection(db, "donations"));
-    const donArr = [];
-    querySnapshot.forEach((doc) => {
-      donArr.push({ ...doc.data(), id: doc.id });
-    });
-    const totalAmount = donArr.reduce((acc, current) => {
-      return acc + parseInt(current.amount);
-    }, 0);
+    const donArr = await readItems(collection(db, "donations"));
+    const [fundDetails] = await readItems(collection(db, "fund-details"));
+    // const fundDetails = {
+    //   donationCount: "0",
+    //   target: "0",
+    //   totalAmount: "0",
+    // };
+    console.log(donArr.length);
+    console.log(donArr.reduce((acc, item) => acc + parseInt(item.amount), 0));
     const sortArr = [...donArr].sort((a, b) => b.createdAt - a.createdAt);
-    setTotal(totalAmount);
+    setFundData({
+      ...fundData,
+      donationCount: fundDetails.donationCount,
+      target: fundDetails.target,
+      totalAmount: fundDetails.totalAmount,
+    });
     setDonations(sortArr);
   };
 
@@ -43,15 +54,18 @@ const HomePage = () => {
       <div className="summary">
         <div className="summary-raised">
           <p> Total raised</p>
-          <p>₹{currencyFormatter(total)}</p>
+          <p>₹{currencyFormatter(fundData.totalAmount)}</p>
         </div>
         <div className="summary-percentage">
-          {((total / 6500000) * 100).toFixed(2)}%
+          {((fundData.totalAmount / parseInt(fundData.target)) * 100).toFixed(
+            2
+          )}
+          %
         </div>
 
         <div className="summary-raised">
           <p> Goal</p>
-          <p>₹65,00,000</p>
+          <p>{fundData.target}</p>
         </div>
       </div>
       <div>

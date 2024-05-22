@@ -2,12 +2,14 @@
 import InputField from "@/components/InputFields";
 import { db } from "@/config/firebase";
 import validation from "@/utils/validation";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import "@/assets/styles/donationForm.css";
 import AuthContext from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
+import toastObject from "@/utils/toastObject";
+import readItems, { editItem, updateFundDetails } from "@/utils/dbUtil";
 const DonationPage = () => {
   const { user } = useContext(AuthContext);
   const route = useRouter();
@@ -62,19 +64,12 @@ const DonationPage = () => {
           createdAt: new Date(),
           paymentStatus: getValidParams(newDonation.paymentStatus, "false"),
         });
+
+        await updateFundDetails(getValidParams(newDonation.amount, "0"), "add");
+
         toast.success(
           ` ${newDonation.name} donated ₹${newDonation.amount} added to fundraiser`,
-          {
-            position: "bottom-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          }
+          toastObject
         );
         setNewDonation({
           name: "",
@@ -90,20 +85,11 @@ const DonationPage = () => {
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
         console.error("Error adding document: ", e);
-        toast.error("Something went wrong", {
-          position: "bottom-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
+        toast.error("Something went wrong", toastObject);
       }
     }
   };
+
   return (
     <div className="donate-form-container">
       <div className="donate-form-title">

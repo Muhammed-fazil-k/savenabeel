@@ -2,6 +2,7 @@
 import { useContext, createContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, ToastContainer, toast } from "react-toastify";
+import toastObject from "@/utils/toastObject";
 
 const AuthContext = createContext();
 export default AuthContext;
@@ -12,7 +13,7 @@ export const AuthProvider = ({ children }) => {
       const storedUser = localStorage.getItem("user");
       return storedUser ? JSON.parse(storedUser) : null;
     } catch (err) {
-      toast.error("Error retrieving user from local storage");
+      toast.error("Error retrieving user from local storage", toastObject);
       return null;
     }
   });
@@ -27,48 +28,18 @@ export const AuthProvider = ({ children }) => {
       setUser(username);
       localStorage.setItem("user", JSON.stringify(username));
       route.push("/");
-      toast.success("Logged in succesfully!!", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.success("Logged in succesfully!!", toastObject);
       return "success";
     } else {
       setUser(null);
-      toast.error("Invalid username/password", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.error("Invalid username/password", toastObject);
       return "failure";
     }
   };
 
   const logout = () => {
     setUser(null);
-    toast.success("Logged out succesfully!!", {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+    toast.success("Logged out succesfully!!", toastObject);
     localStorage.removeItem("user");
     route.push("/"); // Or redirect to appropriate page
   };

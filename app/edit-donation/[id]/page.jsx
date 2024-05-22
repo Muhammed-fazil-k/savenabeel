@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import "@/assets/styles/donationForm.css";
 import InputField from "@/components/InputFields";
 import { Bounce, toast } from "react-toastify";
+import toastObject from "@/utils/toastObject";
+import { editItem, updateFundDetails } from "@/utils/dbUtil";
 
 const EditPage = ({ params }) => {
   const router = useRouter();
@@ -20,6 +22,7 @@ const EditPage = ({ params }) => {
     assembly: "",
     paymentStatus: true,
   });
+  const [prevAmnt, setPrevAmnt] = useState("");
   const [error, setError] = useState({});
 
   const readItem = async (id) => {
@@ -27,18 +30,9 @@ const EditPage = ({ params }) => {
     const docSnap = await getDoc(docRef);
     try {
       setEditDonation(docSnap.data());
+      setPrevAmnt(docSnap.data().amount);
     } catch (err) {
-      toast.error("Unable to get Data", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.error("Unable to get Data", toastObject);
     }
   };
 
@@ -56,36 +50,22 @@ const EditPage = ({ params }) => {
   const handleCheckbox = (e) => {
     setEditDonation({ ...editDonation, paymentStatus: e.target.checked });
   };
-  const editItem = async (e) => {
+  const editItemHandle = async (e) => {
     e.preventDefault();
     const docRef = doc(db, "donations", params.id);
 
     try {
-      await setDoc(docRef, editDonation);
-      console.log(`${docRef} updated ${editDonation}`);
-      toast.success("Edited Succesfully !!!", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      await editItem(docRef, editDonation);
+      console.log("Prev " + prevAmnt);
+      console.log("curr " + editDonation.amount);
+      await updateFundDetails(
+        (parseInt(editDonation.amount) - parseInt(prevAmnt)).toString(),
+        "edit"
+      );
+      toast.success("Edited Succesfully !!!", toastObject);
     } catch (err) {
-      toast.error("Something went wrong", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      console.log("Something went wrong while editing" + err);
+      toast.error("Something went wrong", toastObject);
     }
     router.push("/");
     console.log(editDonation);
@@ -173,7 +153,7 @@ const EditPage = ({ params }) => {
           onChange={handleChange}
           error={error.country}
         />
-        <button onClick={editItem} type="submit">
+        <button onClick={editItemHandle} type="submit">
           Edit
         </button>
       </form>
