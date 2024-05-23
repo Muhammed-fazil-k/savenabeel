@@ -18,8 +18,6 @@ import AuthContext from "@/context/AuthContext";
 import { readItems } from "@/utils/dbUtil";
 import { getNumPages, getPaginatedData } from "@/utils/paginations";
 
-const ITEM_PER_PAGE = 2;
-
 const HomePage = () => {
   const [fundData, setFundData] = useState({
     donationCount: "0",
@@ -29,7 +27,7 @@ const HomePage = () => {
   const [donations, setDonations] = useState([]);
   const { user } = useContext(AuthContext);
 
-  const numPerPage = 8;
+  const numPerPage = 10;
   const [firstDoc, setFirstDoc] = useState(undefined);
   const [lastDoc, setLastDoc] = useState(undefined);
   const [pages, setPages] = useState(null);
